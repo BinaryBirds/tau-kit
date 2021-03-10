@@ -140,8 +140,9 @@ public extension Entities {
         //use(StrToStrMap.randomElement, asMethod: "randomElement")
         //use(StrStrStrToStrMap.replace, asMethod: "replace")
         //use(StrToStrMap.escapeHTML, asFunctionAndMethod: "escapeHTML")
-//        use(DoubleFormatterMap.seconds, asFunctionAndMethod: "formatSeconds")
-//        use(IntFormatterMap.bytes, asFunctionAndMethod: "formatBytes")
+
+        use(DoubleFormatterMap.seconds, asFunctionAndMethod: "formatSeconds")
+        use(IntFormatterMap.bytes, asFunctionAndMethod: "formatBytes")
     }
 }
 
@@ -378,6 +379,8 @@ private extension Entities {
         entities.registerStringReturns()
         entities.registerMutatingMethods()
         
+        entities.registerTimestampAndDate()
+
         return entities
     }
 }

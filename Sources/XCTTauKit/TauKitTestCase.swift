@@ -106,6 +106,11 @@ private extension TauKitTestCase {
         
         DoubleFormatterMap.defaultPlaces = 2
         IntFormatterMap.defaultPlaces = 2
+
+        Timestamp.referenceBase = .referenceDate
+        DateFormatters.defaultFractionalSeconds = false
+        DateFormatters.defaultTZIdentifier = "UTC"
+        DateFormatters.defaultLocale = "en_US_POSIX"
         
         TemplateSources.rootDirectory = "/"
         TemplateSources.defaultExtension = "html"

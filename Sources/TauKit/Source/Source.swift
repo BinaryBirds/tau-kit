@@ -1,0 +1,29 @@
+import Foundation
+
+/// Public protocol to adhere to in order to provide template source originators to `Renderer`
+public protocol Source {
+    /// Given a path name, return an EventLoopFuture holding a ByteBuffer
+    /// - Parameters:
+    ///   - template: Relative template name (eg: `"path/to/template"`)
+    ///   - escape: If the adherent represents a filesystem or something scoped that enforces
+    ///             a concept of directories and sandboxing, whether to allow escaping the view directory
+    ///   - eventLoop: `EventLoop` on which to perform file access
+    /// - Returns: A succeeded `EventLoopFuture` holding a `ByteBuffer` with the raw
+    ///            template, or an appropriate failed state (not found, illegal access, etc)
+    func file(template: String,
+              escape: Bool,
+              on eventLoop: EventLoop) -> EventLoopFuture<ByteBuffer>
+        
+    /// Get the timestamp of last modification for the template, if known.
+    ///
+    /// Default implementation always returns `.distantPast`
+    func timestamp(template: String,
+                   on eventLoop: EventLoop) -> EventLoopFuture<Date>
+}
+
+public extension Source {
+    func timestamp(template: String,
+                   on eventLoop: EventLoop) -> EventLoopFuture<Date> {
+        succeed(.distantPast, on: eventLoop)
+    }
+}

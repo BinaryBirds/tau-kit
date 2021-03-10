@@ -5,7 +5,7 @@
 /// Disallows changing the renderer setup and source
 ///
 /// Defaults to `EmbeddedEventLoop` as the ELG. If using MTELG, test is responsible for tearing it down.
-/// Defaults to `DefaultCache`, no special handling required for changes.
+/// Defaults to `TemplateCache`, no special handling required for changes.
 ///
 /// Adds `render(raw: String...` method for testing a String without using the source
 open class MemoryRendererTestCase: TauKitTestCase {

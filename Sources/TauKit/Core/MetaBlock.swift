@@ -1,18 +1,12 @@
-// MARK: Subject to change prior to 1.0.0 release
-//
-
-// MARK: - MetaBlock
-
 internal extension Entities {
+
     func registerMetaBlocks() {
-        use(RawSwitch.self , asMeta: "raw")
-        use(Define.self    , asMeta: "define")
-        //use(Define.self    , asMeta: "def")
-        use(Evaluate.self  , asMeta: "evaluate")
-        //use(Evaluate.self  , asMeta: "eval")
-        use(Inline.self    , asMeta: "inline")
-        use(Declare.self   , asMeta: "var")
-        use(Declare.self   , asMeta: "let")
+        use(RawSwitch.self, asMeta: "raw")
+        use(Define.self, asMeta: "define")
+        use(Evaluate.self, asMeta: "evaluate")
+        use(Inline.self, asMeta: "inline")
+        use(Declare.self, asMeta: "var")
+        use(Declare.self, asMeta: "let")
     }
 }
 

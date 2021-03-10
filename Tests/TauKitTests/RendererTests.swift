@@ -121,7 +121,7 @@ final class RendererTests: MemoryRendererTestCase {
         
         try XCTAssertTrue(render("uncachedraw").count == Int(Renderer.Option.embeddedASTRawLimit) + 1)
         
-        let ast = (renderer.cache as! DefaultCache).retrieve(.searchKey("uncachedraw"))!
+        let ast = (renderer.cache as! TemplateCache).retrieve(.searchKey("uncachedraw"))!
         XCTAssertTrue(ast.info.requiredRaws.contains("excessiveraw.txt"))
     }
     
@@ -231,7 +231,7 @@ final class RendererTests: MemoryRendererTestCase {
         """
             
         try XCTAssertEqual(expected, render("template",
-                                            .init(["test": encoder.TemplateData])))
+                                            .init(["test": encoder.templateData])))
         try XCTAssertEqual(expected, render("template",
                                   Renderer.Context(encodable: ["test": encodable])!))
     }

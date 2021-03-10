@@ -1,6 +1,6 @@
 
 /// The default implementation of `Cache`
-public final class DefaultCache {
+public final class TemplateCache {
     /// Initializer
     public init() {
         self.locks = (.init(), .init())
@@ -16,7 +16,7 @@ public final class DefaultCache {
 }
 
 // MARK: - Public - Cache
-extension DefaultCache: Cache {
+extension TemplateCache: Cache {
     public var count: Int { locks.cache.readWithLock { cache.count } }
     
     public var isEmpty: Bool { locks.cache.readWithLock { cache.isEmpty } }
@@ -78,7 +78,7 @@ extension DefaultCache: Cache {
 }
 
 // MARK: - Internal - SynchronousCache
-extension DefaultCache: SynchronousCache {
+extension TemplateCache: SynchronousCache {
     /// Blocking file load behavior
     func insert(_ document: AST, replace: Bool) -> Result<AST, TemplateError> {
         /// Blind failure if caching is disabled

@@ -8,10 +8,10 @@ internal struct TemplateDataValue: TemplateDataRepresentable {
     static func literal(_ value: TemplateDataRepresentable) -> Self { .init(value, true) }
     
     init(_ value: TemplateDataRepresentable, _ literal: Bool = false) {
-        container = literal ? .literal(value.TemplateData) : .variable(value, .none) }
+        container = literal ? .literal(value.templateData) : .variable(value, .none) }
     
     var isVariable: Bool { container.isVariable }
-    var TemplateData: TemplateData { container.TemplateData }
+    var templateData: TemplateData { container.templateData }
         
     var cached: Bool {
         if case .variable(_, .none) = container { return false }
@@ -23,7 +23,7 @@ internal struct TemplateDataValue: TemplateDataRepresentable {
     mutating func flatten() {
         let flat: TemplateDataContainer
         switch container {
-            case .variable(let v, let d): flat = d?.container ?? v.TemplateData.container
+            case .variable(let v, let d): flat = d?.container ?? v.templateData.container
             case .literal(let d): flat = d.container
         }
         container = .literal(flat.evaluate)
@@ -31,7 +31,7 @@ internal struct TemplateDataValue: TemplateDataRepresentable {
     
     /// Update stored `TemplateData` value for variable values
     mutating func refresh() {
-        if case .variable(let t, _) = container { container = .variable(t, t.TemplateData) } }
+        if case .variable(let t, _) = container { container = .variable(t, t.templateData) } }
         
     /// Uncache stored `TemplateData` value for variable values
     mutating func uncache() {
@@ -44,7 +44,7 @@ internal struct TemplateDataValue: TemplateDataRepresentable {
         case variable(TemplateDataRepresentable, Optional<TemplateData>)
         
         var isVariable: Bool { if case .variable = self { return true } else { return false } }
-        var TemplateData: TemplateData {
+        var templateData: TemplateData {
             switch self {
                 case .variable(_, .some(let v)), .literal(let v) : return v
                 case .variable(_, .none) : return .error(internal: "Value was not refreshed")

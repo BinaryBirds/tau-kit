@@ -53,7 +53,7 @@ public struct TemplateData: TemplateDataRepresentable, Equatable {
     public func isCoercible(to type: TemplateDataType) -> Bool { storedType.casts(to: type) >= .coercible }
 
     // MARK: - TemplateDataRepresentable
-    public var TemplateData: TemplateData { self }
+    public var templateData: TemplateData { self }
     
     // MARK: - Swift Type Extraction
 
@@ -121,7 +121,7 @@ extension TemplateData: ExpressibleByDictionaryLiteral,
                     ExpressibleByNilLiteral,
                     ExpressibleByStringInterpolation {
     // MARK: Generic `TemplateDataRepresentable` Initializer
-    public init(_ TemplateData: TemplateDataRepresentable) { self = TemplateData.TemplateData }
+    public init(_ TemplateData: TemplateDataRepresentable) { self = TemplateData.templateData }
 
     // MARK: Static Initializer Conformances
     /// Creates a new `TemplateData` from a `Bool`.
@@ -144,13 +144,13 @@ extension TemplateData: ExpressibleByDictionaryLiteral,
         value.map { Self(.dictionary($0)) } ?? .nil(.dictionary) }
     /// Creates a new `TemplateData` from `[String: TemplateDataRepresentable]`.
     public static func dictionary(_ value: [String: TemplateDataRepresentable]?) -> Self {
-        dictionary(value?.mapValues { $0.TemplateData }) }
+        dictionary(value?.mapValues { $0.templateData }) }
     /// Creates a new `TemplateData` from `[TemplateData]`.
     public static func array(_ value: [TemplateData]?) -> Self {
         value.map { Self(.array($0)) } ?? .nil(.array) }
     /// Creates a new `TemplateData` from `[TemplateDataRepresentable]`.
     public static func array(_ value: [TemplateDataRepresentable]?) -> Self {
-        array(value?.map {$0.TemplateData}) }
+        array(value?.map {$0.templateData}) }
     /// Creates a new `TemplateData` for `Optional<TemplateData>`
     public static func `nil`(_ type: TemplateDataType) -> Self {
         Self(.nil(type)) }
@@ -162,10 +162,10 @@ extension TemplateData: ExpressibleByDictionaryLiteral,
 
     // MARK: Literal Initializer Conformances
     public init(nilLiteral: ()) { self = .trueNil }
-    public init(stringLiteral value: StringLiteralType) { self = value.TemplateData }
-    public init(integerLiteral value: IntegerLiteralType) { self = value.TemplateData }
-    public init(floatLiteral value: FloatLiteralType) { self = value.TemplateData }
-    public init(booleanLiteral value: BooleanLiteralType) { self = value.TemplateData }
+    public init(stringLiteral value: StringLiteralType) { self = value.templateData }
+    public init(integerLiteral value: IntegerLiteralType) { self = value.templateData }
+    public init(floatLiteral value: FloatLiteralType) { self = value.templateData }
+    public init(booleanLiteral value: BooleanLiteralType) { self = value.templateData }
     public init(arrayLiteral elements: TemplateData...) { self = .array(elements) }
     public init(dictionaryLiteral elements: (String, TemplateData)...) {
         self = .dictionary(.init(uniqueKeysWithValues: elements)) }
@@ -270,16 +270,3 @@ extension TemplateData: Symbol {
     func evaluate(_ symbols: inout VariableStack) -> Self { state.contains(.variant) ? container.evaluate : self }
 }
 
-internal protocol TemplateDataSelf: NonMutatingMethod, Invariant, StringReturn {}
-internal extension TemplateDataSelf {
-    func evaluate(_ params: CallValues) -> TemplateData {
-        .string("\(params[0].storedType.short.capitalized)\(params[0].isNil ? "?" : "")") }
-}
-
-internal struct SelfMethod: TemplateDataSelf {
-    static var callSignature: [CallParameter] { [.init(types: .any, optional: true)] }
-}
-
-internal struct SelfFunction: TemplateDataSelf {
-    static var callSignature: [CallParameter] { [.init(label: "of", types: .any, optional: true)] }
-}

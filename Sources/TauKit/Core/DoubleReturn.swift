@@ -1,4 +1,5 @@
 internal extension Entities {
+
     func registerDoubleReturns() {
         use(DoubleIntToDoubleMap.rounded, asMethod: "rounded")
     }

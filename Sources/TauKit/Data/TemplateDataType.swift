@@ -16,7 +16,7 @@ public enum TemplateDataType: UInt8, CaseIterable, Hashable {
 
 public extension Set where Element == TemplateDataType {
     /// Any `TemplateDataType` but `.void`
-    static var any: Self { Set(TauKit.TemplateDataType.allCases.filter {$0.returnable}) }
+    static var any: Self { Set(TemplateDataType.allCases.filter {$0.returnable}) }
     /// `TemplateDataType` == `Collection`
     static var collections: Self { [.array, .dictionary] }
     /// `TemplateDataType` == `SignedNumeric`

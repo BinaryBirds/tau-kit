@@ -1,6 +1,3 @@
-// MARK: Subject to change prior to 1.0.0 release
-// MARK: -
-
 import Foundation
 
 /// `TemplateConfiguration` provides global storage of properites that must be consistent across

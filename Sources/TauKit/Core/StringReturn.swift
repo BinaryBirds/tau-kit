@@ -1,7 +1,8 @@
 internal extension Entities {
+
     func registerStringReturns() {
-        use(StrToStrMap.uppercased,  asMethod: "uppercased")
-        use(StrToStrMap.lowercased,  asMethod: "lowercased")
+        use(StrToStrMap.uppercased, asMethod: "uppercased")
+        use(StrToStrMap.lowercased, asMethod: "lowercased")
         use(StrToStrMap.capitalized, asMethod: "capitalized")
     }
 }

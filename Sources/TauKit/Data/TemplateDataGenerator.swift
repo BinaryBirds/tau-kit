@@ -16,7 +16,7 @@ public struct TemplateDataGenerator {
     
     /// Produce a generator that defers evaluation of the parameter until `Renderer` accesses it
     public static func lazy(_ value: @escaping @autoclosure () -> TemplateDataRepresentable) -> Self {
-        .init(.lazy(.lazy(f: {value().TemplateData}, returns: .void))) }
+        .init(.lazy(.lazy(f: {value().templateData}, returns: .void))) }
     
     init(_ value: Container) { self.container = value }
     let container: Container
@@ -25,9 +25,9 @@ public struct TemplateDataGenerator {
         case immediate(TemplateDataRepresentable)
         case lazy(TemplateDataContainer)
         
-        var TemplateData: TemplateData {
+        var templateData: TemplateData {
             switch self {
-                case .immediate(let ldr): return ldr.TemplateData
+                case .immediate(let ldr): return ldr.templateData
                 case .lazy(let lkd): return .init(lkd.evaluate)
             }
         }

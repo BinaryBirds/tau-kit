@@ -1025,7 +1025,7 @@ internal struct Parser {
                         case .operator(let o) : operatorState(o)
                         case .variable(let v) : variableState(v)
                         case .function(let f) : functionState(f)
-                        case .literal(let l)  : complexAppend(.value(l.TemplateData))
+                        case .literal(let l)  : complexAppend(.value(l.templateData))
                         case .keyword(let k)
                            where k == .`self` : openScope = Variable.selfScope
                                                 currentState = .open

@@ -1,7 +1,8 @@
 internal extension Entities {
+
     func registerIntReturns() {
-        use(CollectionToIntMap.count , asMethod: "count")
-        use(StrToIntMap.count        , asMethod: "count")
+        use(CollectionToIntMap.count, asMethod: "count")
+        use(StrToIntMap.count, asMethod: "count")
     }
 }
 

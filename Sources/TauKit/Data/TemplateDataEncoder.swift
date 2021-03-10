@@ -1,6 +1,7 @@
 import Foundation
 
 internal class TemplateDataEncoder: TemplateDataRepresentable, Encoder {
+
     init(_ codingPath: [CodingKey] = [], _ softFail: Bool = true) {
         self.codingPath = codingPath
         self.softFail = softFail
@@ -10,7 +11,7 @@ internal class TemplateDataEncoder: TemplateDataRepresentable, Encoder {
     var codingPath: [CodingKey]
     
     let softFail: Bool
-    var TemplateData: TemplateData { root?.TemplateData ?? err }
+    var templateData: TemplateData { root?.templateData ?? err }
     var err: TemplateData { softFail ? .trueNil : .error("No Encodable Data", function: "TemplateDataEncoder") }
     
     var root: TemplateDataEncoder?
@@ -33,10 +34,10 @@ internal class TemplateDataEncoder: TemplateDataRepresentable, Encoder {
     
     @inline(__always)
     func _encode<T>(_ value: T) throws -> TemplateData where T: Encodable {
-        if let v = value as? TemplateDataRepresentable { return state(v.TemplateData) }
+        if let v = value as? TemplateDataRepresentable { return state(v.templateData) }
         let e = TemplateDataEncoder(codingPath, softFail)
         try value.encode(to: e)
-        return state(e.TemplateData)
+        return state(e.templateData)
     }
     
     @inline(__always)
@@ -45,7 +46,7 @@ internal class TemplateDataEncoder: TemplateDataRepresentable, Encoder {
 
 internal final class AtomicTemplateDataEncoder: TemplateDataEncoder, SingleValueEncodingContainer {
     lazy var container: TemplateData = err
-    override var TemplateData: TemplateData { container }
+    override var templateData: TemplateData { container }
     
     func encodeNil() throws { container = .trueNil }
     func encode<T>(_ value: T) throws where T: Encodable { container = try _encode(value) }
@@ -55,9 +56,9 @@ internal final class UnkeyedTemplateDataEncoder: TemplateDataEncoder, UnkeyedEnc
     var array: [TemplateDataRepresentable] = []
     var count: Int { array.count }
     
-    override var TemplateData: TemplateData { .array(array.map {$0.TemplateData}) }
+    override var templateData: TemplateData { .array(array.map {$0.templateData}) }
     
-    func encodeNil() throws { array.append(TauKit.TemplateData.trueNil) }
+    func encodeNil() throws { array.append(TemplateData.trueNil) }
     func encode<T>(_ value: T) throws where T : Encodable { try array.append(_encode(value)) }
     
     func nestedContainer<K>(keyedBy keyType: K.Type) -> KeyedEncodingContainer<K> where K: CodingKey {
@@ -79,9 +80,9 @@ internal final class KeyedTemplateDataEncoder<K>: TemplateDataEncoder,
     var dictionary: [String: TemplateDataRepresentable] = [:]
     var count: Int { dictionary.count }
     
-    override var TemplateData: TemplateData { .dictionary(dictionary.mapValues {$0.TemplateData}) }
+    override var templateData: TemplateData { .dictionary(dictionary.mapValues {$0.templateData}) }
     
-    func encodeNil(forKey key: K) throws { dictionary[key.stringValue] = TauKit.TemplateData.trueNil }
+    func encodeNil(forKey key: K) throws { dictionary[key.stringValue] = TemplateData.trueNil }
     func encodeIfPresent<T>(_ value: T?, forKey key: K) throws where T : Encodable {
         dictionary[key.stringValue] = try value.map { try _encode($0) } }
     func encode<T>(_ value: T, forKey key: K) throws where T : Encodable {

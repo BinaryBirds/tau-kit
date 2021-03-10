@@ -2,7 +2,7 @@ public struct DoubleFormatterMap: MapMethod, StringReturn {
     @RuntimeGuard public static var defaultPlaces: UInt8 = 2
     
     public static var callSignature: [CallParameter] {[
-        .double, .int(labeled: "places", defaultValue: Int(Self.defaultPlaces).TemplateData)
+        .double, .int(labeled: "places", defaultValue: Int(Self.defaultPlaces).templateData)
     ]}
         
     public func evaluate(_ params: CallValues) -> TemplateData {
@@ -18,7 +18,7 @@ public struct IntFormatterMap: MapMethod, StringReturn {
     @RuntimeGuard public static var defaultPlaces: UInt8 = 2
     
     public static var callSignature: [CallParameter] {[
-        .int, .int(labeled: "places", defaultValue: Int(Self.defaultPlaces).TemplateData)
+        .int, .int(labeled: "places", defaultValue: Int(Self.defaultPlaces).templateData)
     ]}
         
     public func evaluate(_ params: CallValues) -> TemplateData {

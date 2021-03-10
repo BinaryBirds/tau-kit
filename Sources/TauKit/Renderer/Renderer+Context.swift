@@ -166,7 +166,7 @@ public extension Renderer.Context {
             
             if let c = object as? ContextPublisher {
                 values = c.templateVariables.mapValues { $0.container } }
-            else if let data = (object as? TemplateDataRepresentable)?.TemplateData.dictionary {
+            else if let data = (object as? TemplateDataRepresentable)?.templateData.dictionary {
                 values = data }
             else {
                 values = [:]

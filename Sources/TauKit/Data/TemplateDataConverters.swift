@@ -80,7 +80,7 @@ internal enum TemplateDataConverters {
 
     typealias DoubleMap = (`is`: TemplateDataConversion, via: (Double) -> TemplateData)
     static let doubleMaps: [TemplateDataType: DoubleMap] = [
-        .double     : (is: .identity, via: { $0.TemplateData }),
+        .double     : (is: .identity, via: { $0.templateData }),
 
         .bool       : (is: .castable, via: { .bool($0 != 0.0) }),
         .string     : (is: .castable, via: { .string($0.description) }),
@@ -94,7 +94,7 @@ internal enum TemplateDataConverters {
 
     typealias IntMap = (`is`: TemplateDataConversion, via: (Int) -> TemplateData)
     static let intMaps: [TemplateDataType: IntMap] = [
-        .int        : (is: .identity, via: { $0.TemplateData }),
+        .int        : (is: .identity, via: { $0.templateData }),
 
         .bool       : (is: .castable, via: { .bool($0 != 0) }),
         .double     : (is: .castable, via: { .double(Double($0)) }),
@@ -107,7 +107,7 @@ internal enum TemplateDataConverters {
 
     typealias StringMap = (`is`: TemplateDataConversion, via: (String) -> TemplateData)
     static let stringMaps: [TemplateDataType: StringMap] = [
-        .string     : (is: .identity, via: { $0.TemplateData }),
+        .string     : (is: .identity, via: { $0.templateData }),
 
         .bool       : (is: .castable, via: {
                         .bool(Keyword(rawValue: $0.lowercased())?.bool ?? true) }),

@@ -1,6 +1,3 @@
-// MARK: Subject to change prior to 1.0.0 release
-//
-
 // MARK: - Raw Handlers
 import Foundation
 import NIOFoundationCompat
@@ -12,8 +9,7 @@ public struct TemplateBuffer {
     @RuntimeGuard public static var doubleFormatter: (Double) -> String = { $0.description }
     @RuntimeGuard public static var nilFormatter: (_ type: String) -> String = { _ in "" }
     @RuntimeGuard public static var stringFormatter: (String) -> String = { $0 }
-    @RuntimeGuard public static var dataFormatter: (Data, String.Encoding) -> String? =
-        { String(data: $0, encoding: $1) }
+    @RuntimeGuard public static var dataFormatter: (Data, String.Encoding) -> String? = { String(data: $0, encoding: $1) }
     
     private(set) var error: Error? = nil
     private(set) var encoding: String.Encoding

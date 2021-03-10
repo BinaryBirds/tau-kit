@@ -1,16 +1,12 @@
-// MARK: Subject to change prior to 1.0.0 release
-//
-
-// MARK: - Control Flow: Looping
-
 internal extension Entities {
-    func registerControlFlow() {
-        use(ForLoop.self     , asBlock: "for")
-        use(WhileLoop.self   , asBlock: "while")
 
-        use(IfBlock.self     , asBlock: "if")
-        use(ElseIfBlock.self , asBlock: "elseif")
-        use(ElseBlock.self   , asBlock: "else")
+    func registerControlFlow() {
+        use(ForLoop.self, asBlock: "for")
+        use(WhileLoop.self, asBlock: "while")
+
+        use(IfBlock.self, asBlock: "if")
+        use(ElseIfBlock.self, asBlock: "elseif")
+        use(ElseBlock.self, asBlock: "else")
     }
 }
 

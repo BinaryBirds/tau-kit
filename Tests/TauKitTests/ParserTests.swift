@@ -418,7 +418,7 @@ final class ParserTests: MemoryRendererTestCase {
         let loopCount = 10
         let context: Renderer.Context = [
             "name"  : "vapor",
-            "skills" : Array.init(repeating: ["bool": true.TemplateData, "string": "a;sldfkj".TemplateData,"int": 100.TemplateData], count: loopCount).TemplateData,
+            "skills" : Array.init(repeating: ["bool": true.templateData, "string": "a;sldfkj".templateData,"int": 100.templateData], count: loopCount).templateData,
             "me": "LOGAN"
         ]
 

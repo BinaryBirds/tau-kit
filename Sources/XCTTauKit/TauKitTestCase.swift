@@ -21,7 +21,7 @@ open class TauKitTestCase: XCTestCase {
     open var eLGroup: EventLoopGroup = EmbeddedEventLoop()
     
     open var source: Source = MemorySource()
-    open var cache: Cache = DefaultCache()
+    open var cache: Cache = TemplateCache()
     
     open var renderer: Renderer { Renderer(cache: cache,
                                                    sources: .singleSource(source),

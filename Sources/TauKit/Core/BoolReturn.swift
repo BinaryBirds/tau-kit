@@ -1,13 +1,14 @@
 internal extension Entities {
+
     func registerBoolReturns() {
-        use(StrStrToBoolMap.hasPrefix , asMethod: "hasPrefix")
-        use(StrStrToBoolMap.hasSuffix , asMethod: "hasSuffix")
+        use(StrStrToBoolMap.hasPrefix, asMethod: "hasPrefix")
+        use(StrStrToBoolMap.hasSuffix, asMethod: "hasSuffix")
         
-        use(CollectionToBoolMap.isEmpty , asMethod: "isEmpty")
-        use(StrToBoolMap.isEmpty        , asMethod: "isEmpty")
+        use(CollectionToBoolMap.isEmpty, asMethod: "isEmpty")
+        use(StrToBoolMap.isEmpty, asMethod: "isEmpty")
         
-        use(CollectionElementToBoolMap.contains , asMethod: "contains")
-        use(StrStrToBoolMap.contains            , asMethod: "contains")
+        use(CollectionElementToBoolMap.contains, asMethod: "contains")
+        use(StrStrToBoolMap.contains, asMethod: "contains")
     }
 }
 

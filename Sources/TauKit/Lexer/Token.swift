@@ -177,7 +177,7 @@ internal struct Token: TemplatePrintable, Hashable  {
                 }
             }
 
-            var TemplateData: TemplateData {
+            var templateData: TemplateData {
                 switch self {
                     case .int(let i)    : return .int(i)
                     case .double(let d) : return .double(d)

@@ -6,7 +6,7 @@ final class CachePerformanceTests: FullstackRendererTestCase {
 
     override var threads: Int { max(System.coreCount, 1) }
     var files: MemorySource { source as! MemorySource }
-    var Cache: DefaultCache { cache as! DefaultCache }
+    var templateCache: TemplateCache { cache as! TemplateCache }
     
     override func setUp() { Renderer.Option.caching.subtract(.autoUpdate) }
     
@@ -52,7 +52,7 @@ final class CachePerformanceTests: FullstackRendererTestCase {
         
         waitTilDone()
         
-        return Cache.keys.map { Cache.info(for: $0)!.touch }
+        return templateCache.keys.map { templateCache.info(for: $0)!.touch }
                             .reduce(into: (0.0, 0)) {
                                 $0.0 += $1.execAvg * Double($1.count)
                                 $0.1 += Int($1.count)
@@ -76,7 +76,7 @@ final class CachePerformanceTests: FullstackRendererTestCase {
         let total = touches.reduce(into: (0.0, 0)) { $0.0 += $1.0; $0.1 += $1.1 }
         
         print("""
-        Random Cache Speed: \(iterations) renders of \(Cache.keys.count) templates
+        Random Cache Speed: \(iterations) renders of \(templateCache.keys.count) templates
         -------------------------------------------------------------------
         Average \(timer.average) clock time / test
         Average \((total.0 / 10).formatSeconds()) CPU time / test
@@ -119,7 +119,7 @@ final class CachePerformanceTests: FullstackRendererTestCase {
         
         waitTilDone()
         
-        return Cache.keys.map { Cache.info(for: $0)!.touch }
+        return templateCache.keys.map { templateCache.info(for: $0)!.touch }
                              .reduce(into: (0.0, 0)) {
                                 $0.0 += $1.execAvg * Double($1.count)
                                 $0.1 += Int($1.count)

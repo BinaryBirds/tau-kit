@@ -70,11 +70,11 @@ internal struct ContextDictionary {
         let value: Optional<TemplateData>
         if key == parent {
             for (key, value) in values where !value.cached { values[key]!.flatten() }
-            value = .dictionary(values.mapValues {$0.TemplateData})
+            value = .dictionary(values.mapValues {$0.templateData})
         } else {
             let member = key.member!
             if !values[member]!.cached { values[member]!.flatten() }
-            value = values[member]!.TemplateData
+            value = values[member]!.templateData
         }
         cached[key] = value
         return value

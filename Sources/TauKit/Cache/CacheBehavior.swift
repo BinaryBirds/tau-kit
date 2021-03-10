@@ -1,5 +1,6 @@
 /// Behaviors for how render calls will use the configured `Cache` for compiled templates
 public struct CacheBehavior: OptionSet, Hashable {
+
     public private(set) var rawValue: UInt8
     
     public init(rawValue: RawValue) { self.rawValue = rawValue }

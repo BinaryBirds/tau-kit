@@ -24,8 +24,7 @@ let package = Package(
         .testTarget(name: "TauKitTests", dependencies: [
             .target(name: "XCTTauKit"),
         ], exclude: [
-            "Templates/test.html",
-            "Templates/SubTemplates/test.html",
+            "Templates",
         ])
     ]
 )

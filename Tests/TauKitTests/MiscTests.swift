@@ -336,7 +336,7 @@ final class MiscTests: MemoryRendererTestCase {
                                         ["nilVariable": .string(nil)],
                                         options: [.missingVariableThrows(true)])) {
             XCTAssert(($0 as! TemplateError).description
-                        .contains("[self.nonExistantVariable] variable(s) missing"),
+                        .contains("[nonExistantVariable] variable(s) missing"),
                       $0.localizedDescription)
         }
     }

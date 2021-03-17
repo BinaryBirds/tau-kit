@@ -38,6 +38,8 @@ public struct AST: Hashable {
     /// List of any external unprocessed raw inlines needed to fully resolve the document
     let requiredRaws: Set<String>
     let stackDepths: (overallMax: UInt16, inlineMax: UInt16)
+    
+    var error: TemplateError? = nil
 
     // MARK: - Computed Properties And Methods
 
@@ -161,6 +163,8 @@ internal extension AST {
                           stackDepths: stackDepths,
                           _requiredVars: requiredVars,
                           pollTime: now)
+        
+        assert(requiredVars.coalesced.isEmpty, "AST includes coalesced variable state")
     }
 
     /// Any required files, whether template or raw, required to fully resolve
@@ -207,13 +211,19 @@ internal extension AST {
                                              : inAST.scopes[0][0]
                 info.underestimatedSize += nonAtomic ? inAST.underestimatedSize
                                                      : inAST.scopes[0][0].underestimatedSize
-                /// Non-block form defines required (eg x where`define(x = something)`, not `define(x):`)
-                let nonBlockDefines = inAST.requiredVars.filter { $0.isDefine && !$0.state.contains(.blockDefine) }
-                /// Matches for the define identifier provided that *are* block defines, not value defines
-                let badMatches = meta.availableVars?.intersection(nonBlockDefines).filter { $0.state.contains(.blockDefine) } ?? []
-                let satisfied = (meta.availableVars ?? []).subtracting(badMatches)
-                /// Update required vars with any new needed ones that aren't explicitly available at this inline point, and are good.
-                info._requiredVars.formUnion(inAST.requiredVars.subtracting(satisfied))
+                /// Get all required vars/defines the in AST needs that the inline point can't satisfy
+                var inNeeded = inAST.info._requiredVars
+                if let vars = meta.availableVars {
+                    if let stillNeeded = inNeeded.unsatisfied(by: vars) {
+                        inNeeded = stillNeeded }
+                    if let mismatches = inNeeded.badDefineMatches(in: vars) {
+                        error = err(.defineMismatch(a: key._name, b: inAST.key._name, define: mismatches.first!.member!))
+                        return
+                    }
+                    inNeeded = []
+                }
+                
+                info._requiredVars.formUnion(inNeeded)
             }
         }
 
@@ -289,6 +299,8 @@ internal extension AST {
         """
     }
     
+    var errored: Bool { error != nil }
+
     /// Never autoUpdate if pollTime isn't set yet
     func autoUpdate(_ context: Renderer.Context) -> Bool {
         info.pollTime.distance(to: Date()) >= context.pollingFrequency

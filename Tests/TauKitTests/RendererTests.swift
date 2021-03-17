@@ -192,7 +192,7 @@ final class RendererTests: MemoryRendererTestCase {
         Results!
         """
                 
-        try XCAssertTemplateErrors(render("template", aContext), contains: "[self.override] variable(s) missing")
+        try XCAssertTemplateErrors(render("template", aContext), contains: "[override] variable(s) missing")
         aContext["override"] = true
         try XCTAssertEqual(render("template", aContext), expected)
         myAPI.version.major = 1

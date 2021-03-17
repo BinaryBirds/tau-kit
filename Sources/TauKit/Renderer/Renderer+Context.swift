@@ -259,10 +259,6 @@ internal extension Renderer.Context {
         }
     }
     
-    /// All scope & scoped atomic variables defined by the context
-    var allVariables: Set<Variable> {
-        contexts.values.reduce(into: []) {$0.formUnion($1.allVariables)} }
-    
     /// Return a filtered version of the context that holds only literal values for parse stage
     var literalsOnly: Self {
         guard isRootContext else { return .init(isRootContext: false) }

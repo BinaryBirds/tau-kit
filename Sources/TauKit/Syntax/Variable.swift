@@ -9,7 +9,6 @@ internal struct Variable: Symbol, Hashable, Equatable {
     func hash(into hasher: inout Hasher) {
         hasher.combine(flat)
         hasher.combine(isDefine)
-        hasher.combine(isCoalesced)
     }
     
     static func ==(lhs: Self, rhs: Self) -> Bool { lhs.hashValue == rhs.hashValue }
@@ -22,6 +21,7 @@ internal struct Variable: Symbol, Hashable, Equatable {
     /// Atomic, implicit scope variable - `x` - not `$context.x` or `x.pathed`
     var isAtomic: Bool { !(isScoped || isPathed) }
     var isDefine: Bool { state.contains(.defined) }
+    var isBlockDefine: Bool { state.contains(.blockDefine) }
     var isDictionary: Bool { state.contains(.dictionary) }
     var isArray: Bool { state.contains(.array) }
     var isCollection: Bool { isArray || isDictionary }
@@ -45,7 +45,7 @@ internal struct Variable: Symbol, Hashable, Equatable {
     // MARK: - Symbol
     var resolved: Bool { false }
     var invariant: Bool { state.contains(.constant) }
-    var symbols: Set<Variable> { [self] }
+    var symbols: Set<Variable> { isCoalesced ? [] : [self] }
     func resolve(_ symbols: inout VariableStack) -> Self { self }
     func evaluate(_ symbols: inout VariableStack) -> TemplateData { symbols.match(self) }
 
@@ -53,7 +53,7 @@ internal struct Variable: Symbol, Hashable, Equatable {
     var description: String { flat }
     var short: String { flat }
     var terse: String {
-        isDefine ? state.contains(.blockDefine) ? "define(\(member!))" : "\(member!)()"
+        isDefine ? isBlockDefine ? "define(\(member!))" : "\(member!)()"
                  : !isScoped ? String(flat.dropFirst(2))
                              : isSelfScoped ? "self\(!isScope ? ".\(member!)" : "")"
                                             : flat.replacingOccurrences(of: ":", with: ".") }
@@ -181,3 +181,42 @@ internal struct VariableState: OptionSet {
         scope == Variable.selfScope ? [scoped, constant, selfScoped] : incoming
     }
 }
+
+extension Set where Element == Variable {
+     func unsatisfied(by provided: Self) -> Self? {
+         if isEmpty { return nil }
+         if provided.isEmpty { return self }
+         let needed = filter { this in
+             if this.isCoalesced { return false }
+             if this.isDefine {
+                 if let other = provided.first(where: {$0 == this}) {
+                     return other.isBlockDefine ? !this.isBlockDefine : false
+                 } else { return true }
+             }
+             if this.isScoped { return !provided.contains(this) }
+             return provided.contains(this) ? false : !provided.contains(this.contextualized)
+         }
+         return needed.isEmpty ? nil : needed
+     }
+
+    func unsatisfied(by ctx: Renderer.Context) -> Self? {
+         unsatisfied(by: ctx.contexts.isEmpty ? []
+         : ctx.contexts.values.reduce(into: []) { $0.formUnion($1.allVariables) })
+     }
+
+     /// Defines in the provided set that match, but are block defines and not param defines
+     func badDefineMatches(in provided: Self) -> Self? {
+         let mismatches = paramDefines.intersection(provided.filter({$0.isBlockDefine}))
+         return mismatches.isEmpty ? nil : mismatches
+     }
+
+     ///
+     var variables: Self { filter {!$0.isDefine} }
+     /// All defines are inherently block and param defines
+     var blockDefines: Self { filter {$0.isDefine} }
+     /// Param defines are any non-block define
+     var paramDefines: Self { filter {$0.isDefine && !$0.isBlockDefine} }
+
+     var coalesced: Self { filter {$0.isCoalesced} }
+     var unCoalesced: Self { filter {!$0.isCoalesced} }
+ }

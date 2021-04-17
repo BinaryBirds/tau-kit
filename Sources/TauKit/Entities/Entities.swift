@@ -132,14 +132,14 @@ public extension Entities {
     
     /// Register optional entities prior to starting TauKit
     func registerExtendedEntities() {
-        //use(IntIntToIntMap._min      , asFunction: "min")
-        //use(IntIntToIntMap._max      , asFunction: "max")
-        //use(DoubleDoubleToDoubleMap._min, asFunction: "min")
-        //use(DoubleDoubleToDoubleMap._max, asFunction: "max")
-        //use(StrToStrMap.reversed, asMethod: "reversed")
-        //use(StrToStrMap.randomElement, asMethod: "randomElement")
-        //use(StrStrStrToStrMap.replace, asMethod: "replace")
-        //use(StrToStrMap.escapeHTML, asFunctionAndMethod: "escapeHTML")
+        use(IntIntToIntMap._min, asFunction: "min")
+        use(IntIntToIntMap._max, asFunction: "max")
+        use(DoubleDoubleToDoubleMap._min, asFunction: "min")
+        use(DoubleDoubleToDoubleMap._max, asFunction: "max")
+        use(StrToStrMap.reversed, asMethod: "reversed")
+        use(StrToStrMap.randomElement, asMethod: "randomElement")
+        use(StrStrStrToStrMap.replace, asMethod: "replace")
+        use(StrToStrMap.escapeHTML, asFunctionAndMethod: "escapeHTML")
 
         use(DoubleFormatterMap.seconds, asFunctionAndMethod: "formatSeconds")
         use(IntFormatterMap.bytes, asFunctionAndMethod: "formatBytes")

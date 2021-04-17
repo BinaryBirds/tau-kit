@@ -198,7 +198,44 @@ final class RendererTests: MemoryRendererTestCase {
         myAPI.version.major = 1
         try XCTAssert(render("template", aContext).contains("\"major\": 1"))
     }
-    
+        
+    func testSuperEncoderEncodable() throws {
+        
+        struct Foo: Encodable {
+            enum CodingKeys: CodingKey {
+                case bar
+            }
+            let bar: String
+
+            func encode(to encoder: Encoder) throws {
+                var container = encoder.container(keyedBy: CodingKeys.self)
+                var arrayContainer = container.superEncoder(forKey: .bar).unkeyedContainer()
+                try bar.encode(to: arrayContainer.superEncoder())
+            }
+        }
+        
+        let encoder = TemplateDataEncoder()
+        let encodable = Foo(bar: "baz")
+        try encodable.encode(to: encoder)
+        
+//        let jsonEncoder = JSONEncoder()
+//        let data = try! jsonEncoder.encode(encodable)
+//        print(String(data: data, encoding: .utf8)!)
+        
+        files["template"] = """
+        #(test)
+        """
+        
+        let expected = """
+        ["bar": ["baz"]]
+        """
+            
+        try XCTAssertEqual(expected, render("template",
+                                            .init(["test": encoder.templateData])))
+        try XCTAssertEqual(expected, render("template",
+                                  Renderer.Context(encodable: ["test": encodable])!))
+        
+    }
     func testEncoderEncodable() throws {
         struct Test: Encodable, Equatable {
             let fieldOne: String = "One"

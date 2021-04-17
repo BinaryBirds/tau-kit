@@ -134,8 +134,8 @@ public extension Entities {
     func registerExtendedEntities() {
         use(IntIntToIntMap._min, asFunction: "min")
         use(IntIntToIntMap._max, asFunction: "max")
-        use(DoubleDoubleToDoubleMap._min, asFunction: "min")
-        use(DoubleDoubleToDoubleMap._max, asFunction: "max")
+//        use(DoubleDoubleToDoubleMap._min, asFunction: "min")
+//        use(DoubleDoubleToDoubleMap._max, asFunction: "max")
         use(StrToStrMap.reversed, asMethod: "reversed")
         use(StrToStrMap.randomElement, asMethod: "randomElement")
         use(StrStrStrToStrMap.replace, asMethod: "replace")

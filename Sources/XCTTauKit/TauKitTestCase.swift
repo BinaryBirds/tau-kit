@@ -5,9 +5,15 @@ open class TauKitTestCase: XCTestCase {
     /// Override for per-test setup
     open func setUpTemplateEngine() throws {}
         
-    final public override class func setUp() { Self.queue.sync { _resetEngine() } }
+    open override class func setUp() {
+        super.setUp()
+
+        Self.queue.sync { _resetEngine() }
+    }
     
-    final public override func setUpWithError() throws {
+    open override func setUpWithError() throws {
+        try super.setUpWithError()
+
         try Self.queue.sync {
             addTeardownBlock {
                 Self._resetEngine()

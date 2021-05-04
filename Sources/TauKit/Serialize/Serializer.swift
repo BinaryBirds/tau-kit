@@ -28,7 +28,7 @@ internal final class Serializer {
     // MARK: Computed Properties
 
     init(_ ast: AST,
-         _ context: Renderer.Context,
+         _ context: TemplateRenderer.Context,
          _ output: RawBlock.Type) {
         self.ast = ast
         self.start = Date.distantFuture.timeIntervalSinceReferenceDate

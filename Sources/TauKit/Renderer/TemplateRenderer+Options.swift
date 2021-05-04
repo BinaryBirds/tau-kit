@@ -1,6 +1,6 @@
 // MARK: - Public Implementation
 
-public extension Renderer.Option {
+public extension TemplateRenderer.Option {
     /// The current global configuration for rendering options
     static var allCases: [Self] {[
         .timeout(Self.$timeout._unsafeValue),
@@ -17,21 +17,21 @@ public extension Renderer.Option {
     static func ==(lhs: Self, rhs: Self) -> Bool { lhs.celf == rhs.celf }
 }
 
-public extension Renderer.Options {
+public extension TemplateRenderer.Options {
     /// All global settings for options on `Renderer`
-    static var globalSettings: Self { .init(Renderer.Option.allCases) }
+    static var globalSettings: Self { .init(TemplateRenderer.Option.allCases) }
     
-    init(_ elements: [Renderer.Option]) {
+    init(_ elements: [TemplateRenderer.Option]) {
         self._storage = elements.reduce(into: []) {
             if !$0.contains($1) && $1.valid == true { $0.update(with: $1) } }
     }
     
-    init(arrayLiteral elements: Renderer.Option...) { self.init(elements) }
+    init(arrayLiteral elements: TemplateRenderer.Option...) { self.init(elements) }
     
     
     /// Unconditionally update the `Options` with the provided `option`
     @discardableResult
-    mutating func update(_ option: Renderer.Option) -> Bool {
+    mutating func update(_ option: TemplateRenderer.Option) -> Bool {
         let result = option.valid
         if result == false { return false }
         if result == nil { _storage.remove(option) } else { _storage.update(with: option) }
@@ -39,13 +39,13 @@ public extension Renderer.Options {
     }
     
     /// Unconditionally remove the `Options` with the provided `option`
-    mutating func unset(_ option: Renderer.Option.Case) {
+    mutating func unset(_ option: TemplateRenderer.Option.Case) {
         if let x = _storage.first(where: {$0.celf == option}) { _storage.remove(x) } }
 }
 
 // MARK: - Internal Implementation
 
-internal extension Renderer.Option {
+internal extension TemplateRenderer.Option {
     var celf: Case {
         switch self {
             case .timeout                 : return .timeout
@@ -74,7 +74,7 @@ internal extension Renderer.Option {
     }
 }
 
-internal extension Renderer.Options {
-    subscript(key: Renderer.Option.Case) -> Renderer.Option? {
+internal extension TemplateRenderer.Options {
+    subscript(key: TemplateRenderer.Option.Case) -> TemplateRenderer.Option? {
         _storage.first(where: {$0.celf == key}) }
 }

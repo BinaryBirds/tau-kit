@@ -31,8 +31,8 @@ open class FullstackRendererTestCase: TauKitTestCase {
     @discardableResult
     final public override func renderBuffer(_ template: String,
                                             from source: String = "$",
-                                            _ context: Renderer.Context = .emptyContext(),
-                                            options: Renderer.Options = []) -> EventLoopFuture<ByteBuffer> {
+                                            _ context: TemplateRenderer.Context = .emptyContext(),
+                                            options: TemplateRenderer.Options = []) -> EventLoopFuture<ByteBuffer> {
         let which = self.next
         let this = renderers[which].r
         return this.eventLoop.makeSucceededFuture(template)
@@ -47,9 +47,9 @@ open class FullstackRendererTestCase: TauKitTestCase {
     final public func waitTilDone() { while let sleep = toGo { usleep(5 * sleep) } }
     
     private class TestRenderer {
-        init(_ r: Renderer) { self.r = r }
+        init(_ r: TemplateRenderer) { self.r = r }
         
-        let r: Renderer
+        let r: TemplateRenderer
         var tasks: Int = 0
 
         var isDone: Bool { tasks == 0 }

@@ -302,7 +302,7 @@ internal extension AST {
     var errored: Bool { error != nil }
 
     /// Never autoUpdate if pollTime isn't set yet
-    func autoUpdate(_ context: Renderer.Context) -> Bool {
+    func autoUpdate(_ context: TemplateRenderer.Context) -> Bool {
         info.pollTime.distance(to: Date()) >= context.pollingFrequency
     }
 }

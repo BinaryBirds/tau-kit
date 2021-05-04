@@ -24,8 +24,8 @@ final class RendererTests: MemoryRendererTestCase {
         
         files["foo"] = "Hello #custom(name)"
         
-        var baseContext: Renderer.Context = ["name": "vapor"]
-        var moreContext: Renderer.Context = [:]
+        var baseContext: TemplateRenderer.Context = ["name": "vapor"]
+        var moreContext: TemplateRenderer.Context = [:]
         try moreContext.register(object: "bar", toScope: "prefix", type: .unsafe)
         try baseContext.overlay(moreContext)
         
@@ -33,7 +33,7 @@ final class RendererTests: MemoryRendererTestCase {
     }
 
     func testImportResolve() {
-        Renderer.Option.parseWarningThrows = false
+        TemplateRenderer.Option.parseWarningThrows = false
         
         files["a"] = """
         #define(value = "Hello")
@@ -96,7 +96,7 @@ final class RendererTests: MemoryRendererTestCase {
     }
     
     func testInline() throws {
-        Renderer.Option.missingVariableThrows = false
+        TemplateRenderer.Option.missingVariableThrows = false
         
         files["template"] = """
         #(var variable = 10)
@@ -107,7 +107,7 @@ final class RendererTests: MemoryRendererTestCase {
         files["external"] = "#(variable)\n"
         files["uncachedraw"] = #"#inline("excessiveraw.txt", as: raw)"#
         files["excessiveraw.txt"]  = .init(repeating: ".",
-                                           count: Int(Renderer.Option.embeddedASTRawLimit) + 1)
+                                           count: Int(TemplateRenderer.Option.embeddedASTRawLimit) + 1)
         
         let expected = """
         #(variable)
@@ -119,7 +119,7 @@ final class RendererTests: MemoryRendererTestCase {
         try XCTAssertEqual(render("template"), expected)
         try XCTAssertTrue(renderer.info(for: "template").wait()!.resolved)
         
-        try XCTAssertTrue(render("uncachedraw").count == Int(Renderer.Option.embeddedASTRawLimit) + 1)
+        try XCTAssertTrue(render("uncachedraw").count == Int(TemplateRenderer.Option.embeddedASTRawLimit) + 1)
         
         let ast = (renderer.cache as! TemplateCache).retrieve(.searchKey("uncachedraw"))!
         XCTAssertTrue(ast.info.requiredRaws.contains("excessiveraw.txt"))
@@ -177,7 +177,7 @@ final class RendererTests: MemoryRendererTestCase {
     func testContexts() throws {
         let myAPI = _APIVersioning("myAPI", (0,0,1))
         
-        var aContext: Renderer.Context = [:]
+        var aContext: TemplateRenderer.Context = [:]
         
         try aContext.register(object: myAPI, toScope: "api")
         try aContext.register(generators: myAPI.extendedVariables, toScope: "api")
@@ -233,7 +233,7 @@ final class RendererTests: MemoryRendererTestCase {
         try XCTAssertEqual(expected, render("template",
                                             .init(["test": encoder.templateData])))
         try XCTAssertEqual(expected, render("template",
-                                  Renderer.Context(encodable: ["test": encodable])!))
+                                  TemplateRenderer.Context(encodable: ["test": encodable])!))
         
     }
     func testEncoderEncodable() throws {
@@ -270,15 +270,15 @@ final class RendererTests: MemoryRendererTestCase {
         try XCTAssertEqual(expected, render("template",
                                             .init(["test": encoder.templateData])))
         try XCTAssertEqual(expected, render("template",
-                                  Renderer.Context(encodable: ["test": encodable])!))
+                                  TemplateRenderer.Context(encodable: ["test": encodable])!))
     }
     
     func testElideRenderOptionChanges() throws {
-        var options = Renderer.Options.globalSettings
+        var options = TemplateRenderer.Options.globalSettings
         
-        XCTAssertEqual(Renderer.Option.Case.allCases.count,
-                       Renderer.Option.allCases.count)
-        XCTAssertEqual(Renderer.Option.allCases.count, 8)
+        XCTAssertEqual(TemplateRenderer.Option.Case.allCases.count,
+                       TemplateRenderer.Option.allCases.count)
+        XCTAssertEqual(TemplateRenderer.Option.allCases.count, 8)
         XCTAssertEqual(options._storage.count, 0)
         options.update(.timeout(1.0))
         XCTAssertEqual(options._storage.count, 1)
@@ -311,8 +311,8 @@ final class RendererTests: MemoryRendererTestCase {
     func testEncoding() throws {
         files["micro"] = "µ"
         files["tau"] = "τ"
-        let utf: Renderer.Options = [.encoding(.utf8)]
-        let ns: Renderer.Options = [.encoding(.nextstep)]
+        let utf: TemplateRenderer.Options = [.encoding(.utf8)]
+        let ns: TemplateRenderer.Options = [.encoding(.nextstep)]
                 
         var buffer = try renderBuffer("micro", options: utf).wait()
         XCTAssertEqual(buffer.readBytes(length: 2)![1], 0xB5)
@@ -328,7 +328,7 @@ final class RendererTests: MemoryRendererTestCase {
     }
     
     func testContextInfo() throws {
-        var aContext = Renderer.Context()
+        var aContext = TemplateRenderer.Context()
         
         let one = ["key1": 1, "key2": 2]
         let two = ["key3": false, "key4": true]
@@ -349,7 +349,7 @@ final class RendererTests: MemoryRendererTestCase {
     }
     
     func testAutoUpdate() throws {
-        Renderer.Option.pollingFrequency = 0.000_001
+        TemplateRenderer.Option.pollingFrequency = 0.000_001
         
         files["template"] = "Hi"
         try XCTAssertEqual(render("template"), "Hi")

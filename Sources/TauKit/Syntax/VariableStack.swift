@@ -4,7 +4,7 @@
 /// Vars: Any variables defined *at this level* - when value is assigned, go down to level at *which* it was
 ///     last defined
 internal struct VariableStack {
-    var context: Renderer.Context
+    var context: TemplateRenderer.Context
     var stack: [(ids: Set<String>, vars: VariableTablePointer)]
     
     /// Locate the `Variable` in the stack, returning `.error/.trueNil` per option if not found
@@ -42,8 +42,8 @@ internal struct VariableStack {
     mutating func update(_ variable: Variable,
                          _ value: TemplateData,
                          createAt level: Int? = nil) {
-        defer { stack[depth].vars.pointee[variable] = value }
         var depth = stack.count - 1
+        defer { stack[depth].vars.pointee[variable] = value }
         repeat {
             if let found = stack[depth].vars.match(variable) {
                 if found.storedType == .dictionary {

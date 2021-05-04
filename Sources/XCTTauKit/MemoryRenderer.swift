@@ -12,7 +12,7 @@ open class MemoryRendererTestCase: TauKitTestCase {
     final public var files: MemorySource { super.source as! MemorySource }
     
     final public override var source: Source { get { super.source } set {} }
-    final public override var renderer: Renderer { get { super.renderer } set {} }
+    final public override var renderer: TemplateRenderer { get { super.renderer } set {} }
     
     final public override func setUpTemplateEngine() throws {
         source = MemorySource()
@@ -22,8 +22,8 @@ open class MemoryRendererTestCase: TauKitTestCase {
     
     /// Convenience for rendering a raw string immediately - requires underlying ELG be embedded
     final public func render(raw: String,
-                             _ context: Renderer.Context = .emptyContext(),
-                             options: Renderer.Options = []) throws -> String {
+                             _ context: TemplateRenderer.Context = .emptyContext(),
+                             options: TemplateRenderer.Options = []) throws -> String {
         let key = "_raw_x\(files.keys.count)"
         files[key] = raw
         return try super.render(key, from: "$", context, options: options)

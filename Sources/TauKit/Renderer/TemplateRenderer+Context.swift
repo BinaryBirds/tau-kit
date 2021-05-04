@@ -1,4 +1,4 @@
-public extension Renderer.Context {
+public extension TemplateRenderer.Context {
     static func emptyContext(isRoot: Bool = false) -> Self { .init(isRootContext: isRoot) }
     
     /// Initialize a context with the given dictionary assigned to `self`
@@ -247,7 +247,7 @@ public extension Renderer.Context {
     }
 }
 
-internal extension Renderer.Context {
+internal extension TemplateRenderer.Context {
     subscript(scope: Variable, variable: String) -> TemplateDataValue? {
         get { contexts[scope]?[variable] }
         set {
@@ -273,35 +273,35 @@ internal extension Renderer.Context {
         
     var timeout: Double {
         if case .timeout(let b) = options?[.timeout] { return b }
-        else { return Renderer.Option.timeout } }
+        else { return TemplateRenderer.Option.timeout } }
     var parseWarningThrows: Bool {
         if case .parseWarningThrows(let b) = options?[.parseWarningThrows] { return b }
-        else { return Renderer.Option.parseWarningThrows } }
+        else { return TemplateRenderer.Option.parseWarningThrows } }
     var missingVariableThrows: Bool {
         if case .missingVariableThrows(let b) = options?[.missingVariableThrows] { return b }
-        else { return Renderer.Option.missingVariableThrows } }
+        else { return TemplateRenderer.Option.missingVariableThrows } }
     var grantUnsafeEntityAccess: Bool {
         if case .grantUnsafeEntityAccess(let b) = options?[.grantUnsafeEntityAccess] { return b }
-        else { return Renderer.Option.grantUnsafeEntityAccess } }
+        else { return TemplateRenderer.Option.grantUnsafeEntityAccess } }
     var encoding: String.Encoding {
         if case .encoding(let e) = options?[.encoding] { return e }
-        else { return Renderer.Option.encoding } }
+        else { return TemplateRenderer.Option.encoding } }
     var caching: CacheBehavior {
         if case .caching(let c) = options?[.caching] { return c }
-        else { return Renderer.Option.caching } }
+        else { return TemplateRenderer.Option.caching } }
     var embeddedASTRawLimit: UInt32 {
         if !caching.contains(.limitRawInlines) { return caching.contains(.embedRawInlines) ? .max : 0 }
         if case .embeddedASTRawLimit(let l) = options?[.embeddedASTRawLimit] { return l }
-        else { return Renderer.Option.embeddedASTRawLimit }
+        else { return TemplateRenderer.Option.embeddedASTRawLimit }
     }
     var pollingFrequency: Double {
         if !caching.contains(.autoUpdate) { return .infinity }
         if case .pollingFrequency(let d) = options?[.pollingFrequency] { return d }
-        else { return Renderer.Option.pollingFrequency }
+        else { return TemplateRenderer.Option.pollingFrequency }
     }
 }
 
-private extension Renderer.Context {
+private extension TemplateRenderer.Context {
     /// Guard that provided value keys aren't blocked in the scope
     func checkBlockedVariables(in scope: String, _ keys: Set<String>) throws {
         let blockList = keys.intersection(blocked(in: scope))

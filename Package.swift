@@ -11,7 +11,7 @@ let package = Package(
         .library(name: "XCTTauKit", targets: ["XCTTauKit"]),
     ],
     dependencies: [
-        .package(url: "https://github.com/apple/swift-nio.git", from: "2.26.0"),
+        .package(url: "https://github.com/apple/swift-nio.git", from: "2.28.0"),
     ],
     targets: [
         .target(name: "TauKit", dependencies: [

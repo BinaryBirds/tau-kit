@@ -378,7 +378,7 @@ final class ParserTests: MemoryRendererTestCase {
         
         """
 
-        let context: Renderer.Context = [
+        let context: TemplateRenderer.Context = [
             "name"  : "Mr. MagOO",
             "aDict" : ["one": 1, "two": 2.0, "three": ["five", "ten"]]
         ]
@@ -403,7 +403,7 @@ final class ParserTests: MemoryRendererTestCase {
         
         files["template"] = "#(payload.escapeHTML())"
     
-        let context: Renderer.Context = [ "payload": """
+        let context: TemplateRenderer.Context = [ "payload": """
             <script>"Don't let me get out & do some serious damage"</script>
             """]
         
@@ -416,7 +416,7 @@ final class ParserTests: MemoryRendererTestCase {
 
     func testVsComplex() throws {
         let loopCount = 10
-        let context: Renderer.Context = [
+        let context: TemplateRenderer.Context = [
             "name"  : "vapor",
             "skills" : Array.init(repeating: ["bool": true.templateData, "string": "a;sldfkj".templateData,"int": 100.templateData], count: loopCount).templateData,
             "me": "LOGAN"
@@ -472,7 +472,7 @@ final class ParserTests: MemoryRendererTestCase {
         No default: #evaluate(block)
         """
 
-        let context: Renderer.Context = ["name": "Teague", "me": "Teague"]
+        let context: TemplateRenderer.Context = ["name": "Teague", "me": "Teague"]
         
         let sampleAST = try parse(raw: template, options: [.parseWarningThrows(false)])
         let serializer = Serializer(sampleAST, context, TemplateBuffer.self)

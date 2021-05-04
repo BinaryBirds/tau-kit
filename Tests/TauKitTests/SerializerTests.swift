@@ -4,7 +4,7 @@
 final class SerializerTests: MemoryRendererTestCase {
     func testComplex() throws {
         let skill: TemplateData = .dictionary(["bool": true, "string": "a;sldfkj", "int": 100])
-        let context: Renderer.Context = ["name": "vapor", "skills": .array(.init(repeating: skill, count: 10)), "me": "LOGAN"]
+        let context: TemplateRenderer.Context = ["name": "vapor", "skills": .array(.init(repeating: skill, count: 10)), "me": "LOGAN"]
 
         files["template"] = """
         hello, #(name)!
@@ -59,7 +59,7 @@ final class SerializerTests: MemoryRendererTestCase {
         """
         
         let item: TemplateData = .dictionary(["bool": true, "string": "a;sldfkj", "int": 100])
-        let context: Renderer.Context = [
+        let context: TemplateRenderer.Context = [
             "name"  : "vapor",
             "skills" : .array(.init(repeating: item, count: 10_000)),
             "me": "LOGAN"

@@ -199,7 +199,7 @@ extension Set where Element == Variable {
          return needed.isEmpty ? nil : needed
      }
 
-    func unsatisfied(by ctx: Renderer.Context) -> Self? {
+    func unsatisfied(by ctx: TemplateRenderer.Context) -> Self? {
          unsatisfied(by: ctx.contexts.isEmpty ? []
          : ctx.contexts.values.reduce(into: []) { $0.formUnion($1.allVariables) })
      }

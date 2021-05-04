@@ -12,7 +12,7 @@ import Foundation
 ///
 /// Additional instances of Renderer can then be created using these shared modules to allow
 /// concurrent rendering, potentially with unique per-instance scoped data via `userInfo`.
-public final class Renderer {
+public final class TemplateRenderer {
     // MARK: Instance Properties
     /// A thread-safe implementation of `Cache` protocol
     public let cache: Cache
@@ -161,7 +161,7 @@ public final class Renderer {
 }
 
 // MARK: - Public Implementation
-public extension Renderer {
+public extension TemplateRenderer {
     // MARK: Stored Properties
     
     /// The NIO `EventLoop` on which this instance of `Renderer` will operate
@@ -228,7 +228,7 @@ public extension Renderer {
 }
 
 // MARK: - Private Implementation
-private extension Renderer {
+private extension TemplateRenderer {
     // 10 ms limit for execution to act in a blocking fashion
     private static var blockLimit: Double { 0.010 }
     

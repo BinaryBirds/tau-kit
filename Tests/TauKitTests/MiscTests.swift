@@ -33,7 +33,7 @@ final class MiscTests: MemoryRendererTestCase {
     }
 
     func testComplexIf() throws {
-        Renderer.Option.missingVariableThrows = false
+        TemplateRenderer.Option.missingVariableThrows = false
         let raw = "#if(a): #if(b): hallo #else: #if(c): dallo #else: ballo #endif #endif #endif"
         try XCTAssertEqual(render(raw: raw, ["a": true]).trimmed, "ballo")
     }
@@ -120,21 +120,21 @@ final class MiscTests: MemoryRendererTestCase {
     }
 
     func testStringIf() throws {
-        Renderer.Option.missingVariableThrows = false
+        TemplateRenderer.Option.missingVariableThrows = false
         let template = #"#if(name):Hello, #(name)!#else:No Name!#endif"#
         try XCTAssertEqual(render(raw: template), "No Name!")
         try XCTAssertEqual(render(raw: template, ["name": .string("Tanner")]), "Hello, Tanner!")
     }
 
     func testEqualIf() throws {
-        Renderer.Option.missingVariableThrows = false
+        TemplateRenderer.Option.missingVariableThrows = false
         let template = "#if(string1 == string2):Good#else:Bad#endif"
         try XCTAssertEqual(render(raw: template, ["string1": "Tanner", "string2": "Tanner"]), "Good")
         try XCTAssertEqual(render(raw: template, ["string1": "Tanner", "string2": "n/a"]), "Bad")
     }
 
     func testAndStringIf() throws {
-        Renderer.Option.missingVariableThrows = false
+        TemplateRenderer.Option.missingVariableThrows = false
         let template = "#if(name && one):Hello, #(name)#(one)!#elseif(name):Hello, #(name)!#else:No Name!#endif"
         try XCTAssertEqual(render(raw: template, ["name": .string("Tanner"), "one": .string("1")]), "Hello, Tanner1!")
         try XCTAssertEqual(render(raw: template, ["name": .string("Tanner")]), "Hello, Tanner!")
@@ -142,7 +142,7 @@ final class MiscTests: MemoryRendererTestCase {
     }
 
     func testOrStringIf() throws {
-        Renderer.Option.missingVariableThrows = false
+        TemplateRenderer.Option.missingVariableThrows = false
         let template = "#if(name || one):Hello, #(name)#(one)!#else:No Name!#endif"
         try XCTAssertEqual(render(raw: template, ["name": .string("Tanner")]), "Hello, Tanner!")
         try XCTAssertEqual(render(raw: template, ["one": .string("1")]), "Hello, 1!")
@@ -150,7 +150,7 @@ final class MiscTests: MemoryRendererTestCase {
     }
 
     func testArrayIf() throws {
-        Renderer.Option.missingVariableThrows = false
+        TemplateRenderer.Option.missingVariableThrows = false
         let template = "#if(namelist):#for(name in namelist):Hello, #(name)!#endfor#else:No Name!#endif"
         try XCTAssertEqual(render(raw: template, ["namelist": [.string("Tanner")]]), "Hello, Tanner!")
         try XCTAssertEqual(render(raw: template), "No Name!")

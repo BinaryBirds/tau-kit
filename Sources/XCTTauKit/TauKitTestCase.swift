@@ -29,15 +29,15 @@ open class TauKitTestCase: XCTestCase {
     open var source: Source = MemorySource()
     open var cache: Cache = TemplateCache()
     
-    open var renderer: Renderer { Renderer(cache: cache,
+    open var renderer: TemplateRenderer { TemplateRenderer(cache: cache,
                                                    sources: .singleSource(source),
                                                    eventLoop: eLGroup.next()) }
     
     @discardableResult
     final public func render(_ template: String,
                              from source: String = "$",
-                             _ context: Renderer.Context = .emptyContext(),
-                             options: Renderer.Options = []) throws -> String {
+                             _ context: TemplateRenderer.Context = .emptyContext(),
+                             options: TemplateRenderer.Options = []) throws -> String {
         precondition(renderer.eventLoop is EmbeddedEventLoop,
                      "Non-future render call must be on EmbeddedEventLoop")
         return try renderBuffer(template, from: source, context, options: options)
@@ -47,8 +47,8 @@ open class TauKitTestCase: XCTestCase {
     @discardableResult
     open func renderBuffer(_ template: String,
                              from source: String = "$",
-                             _ context: Renderer.Context = .emptyContext(),
-                             options: Renderer.Options = []) -> EventLoopFuture<ByteBuffer> {
+                             _ context: TemplateRenderer.Context = .emptyContext(),
+                             options: TemplateRenderer.Options = []) -> EventLoopFuture<ByteBuffer> {
         renderer.render(template: template, from: source, context: context, options: options)
     }
     
@@ -70,8 +70,8 @@ internal extension TauKitTestCase {
     
     @discardableResult
     func parse(raw: String, name: String = "rawTemplate",
-               context: Renderer.Context = [:],
-               options: Renderer.Options = []) throws -> AST {
+               context: TemplateRenderer.Context = [:],
+               options: TemplateRenderer.Options = []) throws -> AST {
         let tokens = try lex(raw: raw, name: name)
         var context = context
         if context.options == nil { context.options = options }
@@ -94,14 +94,14 @@ private extension TauKitTestCase {
         TemplateConfiguration.tagIndicator = .octothorpe
         TemplateConfiguration.entities = .coreEntities
         
-        Renderer.Option.timeout = 0.050
-        Renderer.Option.parseWarningThrows = true
-        Renderer.Option.missingVariableThrows = true
-        Renderer.Option.grantUnsafeEntityAccess = false
-        Renderer.Option.encoding = .utf8
-        Renderer.Option.caching = .default
-        Renderer.Option.embeddedASTRawLimit = 4096
-        Renderer.Option.pollingFrequency = 10.0
+        TemplateRenderer.Option.timeout = 0.050
+        TemplateRenderer.Option.parseWarningThrows = true
+        TemplateRenderer.Option.missingVariableThrows = true
+        TemplateRenderer.Option.grantUnsafeEntityAccess = false
+        TemplateRenderer.Option.encoding = .utf8
+        TemplateRenderer.Option.caching = .default
+        TemplateRenderer.Option.embeddedASTRawLimit = 4096
+        TemplateRenderer.Option.pollingFrequency = 10.0
         
         TemplateBuffer.boolFormatter = { $0.description }
         TemplateBuffer.intFormatter = { $0.description }

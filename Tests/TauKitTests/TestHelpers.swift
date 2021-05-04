@@ -86,8 +86,8 @@ final class PrintTests: MemoryRendererTestCase {
     }
 
     func testExtendAndExport() throws {
-        Renderer.Option.missingVariableThrows = false
-        Renderer.Option.parseWarningThrows = false
+        TemplateRenderer.Option.missingVariableThrows = false
+        TemplateRenderer.Option.parseWarningThrows = false
         
         let template = """
         #define(title = "Welcome")

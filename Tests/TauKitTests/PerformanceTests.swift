@@ -8,7 +8,7 @@ final class CachePerformanceTests: FullstackRendererTestCase {
     var files: MemorySource { source as! MemorySource }
     var templateCache: TemplateCache { cache as! TemplateCache }
     
-    override func setUp() { Renderer.Option.caching.subtract(.autoUpdate) }
+    override func setUp() { TemplateRenderer.Option.caching.subtract(.autoUpdate) }
     
     func testCacheLinearSpeed() {
         var timer = Stopwatch()

@@ -12,7 +12,7 @@ internal struct Parser {
 
     init(_ key: AST.Key,
          _ tokens: [Token],
-         _ context: Renderer.Context = .emptyContext()) {
+         _ context: TemplateRenderer.Context = .emptyContext()) {
         self.entities = TemplateConfiguration.$entities._unsafeValue
         self.key = key
         self.tokens = tokens

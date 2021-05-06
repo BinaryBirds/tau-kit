@@ -4,7 +4,7 @@ internal class TemplateDataEncoder: TemplateDataRepresentable, Encoder {
     
     var codingPath: [CodingKey]
     let softFail: Bool
-    fileprivate var parent: TemplateDataEncoder?
+    fileprivate unowned var parent: TemplateDataEncoder?
     private var root: TemplateDataEncoder?
 
     init(_ codingPath: [CodingKey] = [], _ softFail: Bool = true, _ parent: TemplateDataEncoder? = nil) {

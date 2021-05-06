@@ -95,13 +95,14 @@ extension TemplateCache: SynchronousCache {
 
     /// Blocking file load behavior
     func retrieve(_ key: AST.Key) -> AST? {
-        return locks.cache.readWithLock {
-            guard cache.keys.contains(key) else { return nil }
+        return locks.cache.writeWithLock {
+            guard cache.keys.contains(key) else {
+                return nil
+            }
             locks.touch.writeWithLock {
-                if touches[key]!.count >= 128,
-                   let touch = touches.updateValue(.empty, forKey: key),
-                   touch != .empty {
-                    cache[key]!.touch(values: touch) }
+                if touches[key]!.count >= 128, let touch = touches.updateValue(.empty, forKey: key), touch != .empty {
+                    cache[key]!.touch(values: touch)
+                }
             }
             return cache[key]
         }

@@ -4,10 +4,10 @@ import NIOConcurrencyHelpers
 internal extension Entities {
 
     func registerTimestampAndDate() {
-        use(Timestamp(), asFunction: "Timestamp")
-        use(DateFormatters.ISO8601(), asFunction: "Date")
-        use(DateFormatters.Fixed(), asFunction: "Date")
-        use(DateFormatters.Localized(), asFunction: "Date")
+        use(TimestampEntity(), asFunction: "Timestamp")
+        use(DateFormatterEntities.ISO8601(), asFunction: "Date")
+        use(DateFormatterEntities.Fixed(), asFunction: "Date")
+        use(DateFormatterEntities.Localized(), asFunction: "Date")
     }
 }
 
@@ -16,7 +16,7 @@ internal extension Entities {
 /// A time interval relative to the specificed base date
 ///
 /// Default value for the reference date is the Swift Date `referenceDate` (2001-01-01 00:00:00 +0000)
-public struct Timestamp: Function, DoubleReturn {
+public struct TimestampEntity: Function, DoubleReturn {
     /// The date used as the reference base for all interpretations of Double timestamps
     @RuntimeGuard public static var referenceBase: ReferenceBase = .referenceDate
     
@@ -49,7 +49,7 @@ public struct Timestamp: Function, DoubleReturn {
     }
 }
 
-public struct DateFormatters {
+public struct DateFormatterEntities {
     /// Used by `ISO8601`, `Fixed`, & `.Custom`
     @RuntimeGuard(condition: {TimeZone(identifier: $0) != nil})
     public static var defaultTZIdentifier: String = "UTC"
@@ -78,19 +78,19 @@ public struct DateFormatters {
             
             if timestamp.isNumeric { interval = timestamp.double! }
             else {
-                guard let t = Timestamp.ReferenceBase(rawValue: timestamp.string!) else {
-                    return Timestamp.ReferenceBase.fault(timestamp.string!) }
+                guard let t = TimestampEntity.ReferenceBase(rawValue: timestamp.string!) else {
+                    return TimestampEntity.ReferenceBase.fault(timestamp.string!) }
                 interval = t.interval
             }
             
-            var formatter = DateFormatters[zone, fractional]
+            var formatter = DateFormatterEntities[zone, fractional]
             if formatter == nil {
                 guard let tZ = TimeZone(identifier: zone) else {
                     return .error("\(zone) is not a valid time zone identifier") }
                 formatter = ISO8601DateFormatter()
                 formatter!.timeZone = tZ
                 if fractional { formatter!.formatOptions.update(with: .withFractionalSeconds) }
-                DateFormatters[zone, fractional] = formatter
+                DateFormatterEntities[zone, fractional] = formatter
             }
             return .string(formatter!.string(from: base.addingTimeInterval(interval)))
         }
@@ -105,7 +105,7 @@ public struct DateFormatters {
         ]}
         
         public func evaluate(_ params: CallValues) -> TemplateData {
-            DateFormatters.evaluate(params, fixed: true) }
+            DateFormatterEntities.evaluate(params, fixed: true) }
     }
     
     /// Variable format localized DateFormatter strings
@@ -118,7 +118,7 @@ public struct DateFormatters {
         ]}
         
         public func evaluate(_ params: CallValues) -> TemplateData {
-            DateFormatters.evaluate(params, fixed: false) }
+            DateFormatterEntities.evaluate(params, fixed: false) }
     }
     
     // MARK: Internal Only
@@ -142,7 +142,7 @@ public struct DateFormatters {
 
 // MARK: Internal implementations
 
-internal extension Timestamp.ReferenceBase {
+internal extension TimestampEntity.ReferenceBase {
     var interval: Double {
          switch self {
              case .now: return Date().timeIntervalSinceReferenceDate
@@ -158,7 +158,7 @@ internal extension Timestamp.ReferenceBase {
      }
 }
 
-internal extension DateFormatters {
+internal extension DateFormatterEntities {
     static subscript(timezone: String, fractional: Bool) -> ISO8601DateFormatter? {
         get { lock.readWithLock { iso8601[timezone + (fractional ? "T" : "F")] } }
         set { lock.writeWithLock { iso8601[timezone + (fractional ? "T" : "F")] = newValue } }
@@ -170,10 +170,10 @@ internal extension DateFormatters {
     }
     
     static var base: Date {
-        Date(timeIntervalSinceReferenceDate: Timestamp.referenceBase.interval) }
+        Date(timeIntervalSinceReferenceDate: TimestampEntity.referenceBase.interval) }
     
     static var now: () -> TemplateData = {
-        Timestamp().evaluate(.init(["now", Timestamp.referenceBase.templateData], ["since": 1])) }
+        TimestampEntity().evaluate(.init(["now", TimestampEntity.referenceBase.templateData], ["since": 1])) }
     
     static func timeZone(_ from: String) -> TimeZone? {
         if let tz = TimeZone(abbreviation: from) {
@@ -195,8 +195,8 @@ internal extension DateFormatters {
                 
         if timestamp.isNumeric { interval = timestamp.double! }
         else {
-            guard let t = Timestamp.ReferenceBase(rawValue: timestamp.string!) else {
-                return Timestamp.ReferenceBase.fault(timestamp.string!) }
+            guard let t = TimestampEntity.ReferenceBase(rawValue: timestamp.string!) else {
+                return TimestampEntity.ReferenceBase.fault(timestamp.string!) }
             interval = t.interval
         }
         
